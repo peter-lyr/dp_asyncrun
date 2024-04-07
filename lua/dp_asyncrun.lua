@@ -39,7 +39,7 @@ function M.notify_qflist()
   M.notify_info(lines)
 end
 
-function M.done_default()
+function M.done()
   M.qflist = vim.fn.getqflist()
   M.notify_qflist()
   vim.cmd 'au! User AsyncRunStop'
@@ -55,7 +55,7 @@ function M.done_replace_default(callback)
       M.done_changed = nil
       callback()
       vim.cmd 'au! User AsyncRunStop'
-      AsyncRunDone = M.done_default
+      AsyncRunDone = M.done
     end
     M.done_changed = 1
   end
@@ -66,9 +66,9 @@ function M.done_append_default(callback)
   if callback then
     AsyncRunDone = function()
       M.done_changed = nil
-      M.done_default()
+      M.done()
       callback()
-      AsyncRunDone = M.done_default
+      AsyncRunDone = M.done
     end
     M.done_changed = 1
   end
@@ -77,7 +77,7 @@ end
 
 function M.done_default()
   if not M.done_changed then
-    AsyncRunDone = M.done_default
+    AsyncRunDone = M.done
     M._au_user_asyncrunstop()
   end
 end
