@@ -25,7 +25,7 @@ function M.notify_info(message)
   })
 end
 
-M.dp_asyncrun_done_changed = nil
+M.done_changed = nil
 
 function M.notify_qflist()
   local lines = {}
@@ -39,7 +39,7 @@ function M.notify_qflist()
   M.notify_info(lines)
 end
 
-function M.dp_asyncrun_done_default()
+function M.done_default()
   M.qflist = vim.fn.getqflist()
   M.notify_qflist()
   vim.cmd 'au! User AsyncRunStop'
@@ -49,35 +49,35 @@ function M._au_user_asyncrunstop()
   vim.cmd 'au User AsyncRunStop call v:lua.AsyncRunDone()'
 end
 
-function M.dp_asyncrun_done_replace_default(callback)
+function M.done_replace_default(callback)
   if callback then
     AsyncRunDone = function()
-      M.dp_asyncrun_done_changed = nil
+      M.done_changed = nil
       callback()
       vim.cmd 'au! User AsyncRunStop'
-      AsyncRunDone = M.dp_asyncrun_done_default
+      AsyncRunDone = M.done_default
     end
-    M.dp_asyncrun_done_changed = 1
+    M.done_changed = 1
   end
   M._au_user_asyncrunstop()
 end
 
-function M.dp_asyncrun_done_append_default(callback)
+function M.done_append_default(callback)
   if callback then
     AsyncRunDone = function()
-      M.dp_asyncrun_done_changed = nil
-      M.dp_asyncrun_done_default()
+      M.done_changed = nil
+      M.done_default()
       callback()
-      AsyncRunDone = M.dp_asyncrun_done_default
+      AsyncRunDone = M.done_default
     end
-    M.dp_asyncrun_done_changed = 1
+    M.done_changed = 1
   end
   M._au_user_asyncrunstop()
 end
 
-function M.dp_asyncrun_done_default()
-  if not M.dp_asyncrun_done_changed then
-    AsyncRunDone = M.dp_asyncrun_done_default
+function M.done_default()
+  if not M.done_changed then
+    AsyncRunDone = M.done_default
     M._au_user_asyncrunstop()
   end
 end
