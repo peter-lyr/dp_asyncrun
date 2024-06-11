@@ -30,17 +30,8 @@ M.done_changed = nil
 function M._notify_qflist()
   local lines = {}
   local qflist = vim.deepcopy(M.qflist)
-  local chcp = vim.fn.system("chcp")
-  chcp = string.match(chcp, '936')
-  if chcp then
-    for _, i in ipairs(qflist) do
-      i.text = vim.fn.iconv(i.text, "cp936", "utf-8")
-      lines[#lines + 1] = i.text
-    end
-  else
-    for _, i in ipairs(qflist) do
-      lines[#lines + 1] = i.text
-    end
+  for _, i in ipairs(qflist) do
+    lines[#lines + 1] = i.text
   end
   if qflist then
     vim.fn.setqflist(qflist)
